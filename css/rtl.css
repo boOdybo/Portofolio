@@ -1,0 +1,89 @@
+/**
+ * Arabic RTL Stylesheet & Typographic Overrides
+ * Seamless RTL adaptation for Sidebar, Components, and Dual Themes
+ */
+
+html[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="rtl"] body {
+  font-family: var(--font-arabic), var(--font-body);
+}
+
+html[dir="rtl"] h1, 
+html[dir="rtl"] h2, 
+html[dir="rtl"] h3, 
+html[dir="rtl"] h4,
+html[dir="rtl"] .hero-title-name {
+  font-family: var(--font-arabic), var(--font-display);
+  letter-spacing: normal;
+}
+
+/* Sidebar on the Right */
+html[dir="rtl"] .sidebar {
+  left: auto;
+  right: 0;
+  border-right: none;
+  border-left: 1px solid var(--border-subtle);
+}
+
+html[dir="rtl"] .main-content {
+  margin-left: 0;
+  margin-right: var(--sidebar-width);
+}
+
+html[dir="rtl"] .nav-item.active::before {
+  left: auto;
+  right: 0;
+  border-radius: 4px 0 0 4px;
+}
+
+html[dir="rtl"] .hero-subtitle-rotate::before {
+  content: "<";
+}
+
+html[dir="rtl"] .view-details-arrow {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .project-card:hover .view-details-arrow {
+  transform: translateX(-4px);
+}
+
+html[dir="rtl"] .modal-specs-table th {
+  text-align: right;
+}
+
+html[dir="rtl"] .modal-specs-table td {
+  text-align: right;
+}
+
+html[dir="rtl"] .cv-bullets {
+  padding-left: 0;
+  padding-right: 18px;
+}
+
+html[dir="rtl"] .terminal-contact-item:hover {
+  transform: translateX(-4px);
+}
+
+html[dir="rtl"] .toast-msg {
+  right: auto;
+  left: 24px;
+}
+
+@media (max-width: 1024px) {
+  html[dir="rtl"] .sidebar {
+    transform: translateX(100%);
+  }
+
+  html[dir="rtl"] .sidebar.open {
+    transform: translateX(0);
+  }
+
+  html[dir="rtl"] .main-content {
+    margin-right: 0;
+  }
+}

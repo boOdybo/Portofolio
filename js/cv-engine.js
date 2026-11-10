@@ -18,7 +18,7 @@ class CvEngine {
   }
 
   bindEvents() {
-    const roleButtons = document.querySelectorAll('.cv-role-btn');
+    const roleButtons = document.querySelectorAll('.cv-role-pill-btn');
     roleButtons.forEach(btn => {
       btn.addEventListener('click', (e) => {
         roleButtons.forEach(b => b.classList.remove('active'));
@@ -107,123 +107,125 @@ class CvEngine {
     }
 
     const html = `
-      <div class="cv-header">
-        <h2 class="cv-name">${profile.name[lang]}</h2>
-        <div class="cv-title">${roleInfo.title} | ${profile.nickname[lang]}</div>
-        <div class="cv-contact-line">
-          <span>📍 ${profile.location[lang]}</span>
-          <span>📞 ${profile.phone}</span>
-          <span>✉️ ${profile.email}</span>
-          <span>🔗 linkedin.com/in/${profile.linkedinUser}</span>
-          <span>💻 github.com/${profile.githubUser}</span>
-          <span>📺 youtube.com/${profile.youtubeUser}</span>
+      <div class="cv-sheet-preview">
+        <div class="cv-sheet-header">
+          <h2 class="cv-sheet-name">${profile.name[lang]}</h2>
+          <div class="cv-sheet-title">${roleInfo.title} | ${profile.nickname[lang]}</div>
+          <div class="cv-sheet-contact">
+            <span>📍 ${profile.location[lang]}</span>
+            <span>📞 ${profile.phone}</span>
+            <span>✉️ ${profile.email}</span>
+            <span>🔗 linkedin.com/in/${profile.linkedinUser}</span>
+            <span>💻 github.com/${profile.githubUser}</span>
+            <span>📺 youtube.com/${profile.youtubeUser}</span>
+          </div>
         </div>
-      </div>
 
-      <!-- Professional Summary -->
-      <div class="cv-section">
-        <h3 class="cv-section-heading">${lang === 'ar' ? 'الملخص المهني' : 'PROFESSIONAL SUMMARY'}</h3>
-        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65;">
-          ${roleInfo.summary}
-        </p>
-      </div>
+        <!-- Professional Summary -->
+        <div class="cv-sheet-section">
+          <h3 class="cv-sheet-section-title">${lang === 'ar' ? 'الملخص المهني' : 'PROFESSIONAL SUMMARY'}</h3>
+          <p style="font-size: 0.92rem; color: #334155; line-height: 1.7;">
+            ${roleInfo.summary}
+          </p>
+        </div>
 
-      <!-- Technical Skills Matrix -->
-      <div class="cv-section">
-        <h3 class="cv-section-heading">${lang === 'ar' ? 'المهارات التقنية الأساسية' : 'CORE TECHNICAL SKILLS'}</h3>
-        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-          ${roleInfo.coreSkills.map(sk => `
-            <span style="font-family: var(--font-mono); font-size: 0.78rem; padding: 4px 10px; background: rgba(0,255,157,0.08); border: 1px solid rgba(0,255,157,0.2); border-radius: 4px; color: var(--signal-green);">
-              ${sk}
-            </span>
+        <!-- Technical Skills Matrix -->
+        <div class="cv-sheet-section">
+          <h3 class="cv-sheet-section-title">${lang === 'ar' ? 'المهارات التقنية الأساسية' : 'CORE TECHNICAL SKILLS'}</h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            ${roleInfo.coreSkills.map(sk => `
+              <span style="font-family: var(--font-mono); font-size: 0.78rem; padding: 4px 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px; color: #166534; font-weight: 600;">
+                ${sk}
+              </span>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="cv-sheet-section">
+          <h3 class="cv-sheet-section-title">${lang === 'ar' ? 'الخبرة العملية والتطوير التقني' : 'PROFESSIONAL EXPERIENCE'}</h3>
+          
+          <div class="cv-sheet-item">
+            <div class="cv-sheet-item-head">
+              <span>${lang === 'ar' ? 'مؤسس ومطور الإلكترونيات — TronicsHub' : 'Founder & Lead Hardware Developer — TronicsHub'}</span>
+              <span style="font-family: var(--font-mono); font-size: 0.82rem; color: #0284c7;">${lang === 'ar' ? 'أكتوبر 2024 – حتى الآن' : 'Oct 2024 – Present'}</span>
+            </div>
+            <div class="cv-sheet-item-sub">${profile.location[lang]}</div>
+            <ul class="cv-sheet-bullets">
+              <li>${lang === 'ar' ? 'تصميم وتصنيع النماذج الأولية للأجهزة الإلكترونية والأنظمة المدمجة من مرحلة الفكرة حتى الدائرة المتكاملة.' : 'Design and prototype custom electronic devices and embedded systems combining MCUs, sensors, actuators, and communication buses.'}</li>
+              <li>${lang === 'ar' ? 'تقديم الدعم الفني والاستشارات الهندسية لطلاب كليات الهندسة والتكنولوجيا في تنفيذ وتصحيح مشاريع التخرج.' : 'Provide technical consulting and hardware/firmware debugging support for engineering graduation projects.'}</li>
+              <li>${lang === 'ar' ? 'إعداد وتقديم برامج تدريبية تخصصية حضورية وعبر الإنترنت في الأردوينو، الروبوتات، والمعالجات الدقيقة.' : 'Deliver structured training programs in Arduino, Microprocessors, Robotics, and Applied University Mathematics.'}</li>
+            </ul>
+          </div>
+
+          <div class="cv-sheet-item">
+            <div class="cv-sheet-item-head">
+              <span>${lang === 'ar' ? 'صانع محتوى ومحاضر تقني — قناة ملاذ (Malaz)' : 'Technical Instructor & Educational Creator — Malaz Academy'}</span>
+              <span style="font-family: var(--font-mono); font-size: 0.82rem; color: #0284c7;">${lang === 'ar' ? 'ديسمبر 2020 – حتى الآن' : 'Dec 2020 – Present'}</span>
+            </div>
+            <div class="cv-sheet-item-sub">1.81K+ Subscribers | 262 Published Video Lectures</div>
+            <ul class="cv-sheet-bullets">
+              <li>${lang === 'ar' ? 'إعداد وتسجيل 262 محاضرة أكاديمية مفصلة في الرياضيات الجامعية المتقدمة (تفاضل وتكامل، معادلات تفاضلية، تحويلات لابلور، متسلسلات فورير).' : 'Produced and published 262 high-quality lectures covering Higher Mathematics (Calculus, ODEs, Laplace Transforms, Fourier Series).'}</li>
+              <li>${lang === 'ar' ? 'شرح معمارية ولغة التجميع لمعالج Intel 8085 ونظريات الدوائر الكهربائية ونظم التحكم الخطي.' : 'Authored comprehensive curricula on Intel 8085 Assembly Language, Linear Control Systems, and Electric Circuit Theorems.'}</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Selected Engineering Projects -->
+        <div class="cv-sheet-section">
+          <h3 class="cv-sheet-section-title">${lang === 'ar' ? 'أبرز المشروعات الهندسية المنفذة' : 'SELECTED ENGINEERING PROJECTS'}</h3>
+          ${relevantProjects.slice(0, 4).map(p => `
+            <div class="cv-sheet-item">
+              <div class="cv-sheet-item-head">
+                <span>${p.title[lang]}</span>
+                <span style="font-family: var(--font-mono); font-size: 0.78rem; color: #0284c7;">${p.badge}</span>
+              </div>
+              <div class="cv-sheet-item-sub">${p.tagline[lang]}</div>
+              <p style="font-size: 0.88rem; color: #475569; margin-bottom: 6px;">${p.summary[lang]}</p>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #64748b;">
+                <strong>Architecture:</strong> ${p.architecture}
+              </div>
+            </div>
           `).join('')}
         </div>
-      </div>
 
-      <!-- Experience -->
-      <div class="cv-section">
-        <h3 class="cv-section-heading">${lang === 'ar' ? 'الخبرة العملية والتطوير التقني' : 'PROFESSIONAL EXPERIENCE'}</h3>
-        
-        <div class="cv-item">
-          <div class="cv-item-title-row">
-            <span>${lang === 'ar' ? 'مؤسس ومطور الإلكترونيات — TronicsHub' : 'Founder & Lead Hardware Developer — TronicsHub'}</span>
-            <span style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--copper-gold);">${lang === 'ar' ? 'أكتوبر 2024 – حتى الآن' : 'Oct 2024 – Present'}</span>
-          </div>
-          <div class="cv-item-subtitle">${profile.location[lang]}</div>
-          <ul class="cv-bullets">
-            <li>${lang === 'ar' ? 'تصميم وتصنيع النماذج الأولية للأجهزة الإلكترونية والأنظمة المدمجة من مرحلة الفكرة حتى الدائرة المتكاملة.' : 'Design and prototype custom electronic devices and embedded systems combining MCUs, sensors, actuators, and communication buses.'}</li>
-            <li>${lang === 'ar' ? 'تقديم الدعم الفني والاستشارات الهندسية لطلاب كليات الهندسة والتكنولوجيا في تنفيذ وتصحيح مشاريع التخرج.' : 'Provide technical consulting and hardware/firmware debugging support for engineering graduation projects.'}</li>
-            <li>${lang === 'ar' ? 'إعداد وتقديم برامج تدريبية تخصصية حضورية وعبر الإنترنت في الأردوينو، الروبوتات، والمعالجات الدقيقة.' : 'Deliver structured training programs in Arduino, Microprocessors, Robotics, and Applied University Mathematics.'}</li>
-          </ul>
-        </div>
-
-        <div class="cv-item">
-          <div class="cv-item-title-row">
-            <span>${lang === 'ar' ? 'صانع محتوى ومحاضر تقني — قناة ملاذ (Malaz)' : 'Technical Instructor & Educational Creator — Malaz Academy'}</span>
-            <span style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--copper-gold);">${lang === 'ar' ? 'ديسمبر 2020 – حتى الآن' : 'Dec 2020 – Present'}</span>
-          </div>
-          <div class="cv-item-subtitle">1.81K+ Subscribers | 262 Published Video Lectures</div>
-          <ul class="cv-bullets">
-            <li>${lang === 'ar' ? 'إعداد وتسجيل 262 محاضرة أكاديمية مفصلة في الرياضيات الجامعية المتقدمة (تفاضل وتكامل، معادلات تفاضلية، تحويلات لابلور، متسلسلات فورير).' : 'Produced and published 262 high-quality lectures covering Higher Mathematics (Calculus, ODEs, Laplace Transforms, Fourier Series).'}</li>
-            <li>${lang === 'ar' ? 'شرح معمارية ولغة التجميع لمعالج Intel 8085 ونظريات الدوائر الكهربائية ونظم التحكم الخطي.' : 'Authored comprehensive curricula on Intel 8085 Assembly Language, Linear Control Systems, and Electric Circuit Theorems.'}</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Selected Engineering Projects -->
-      <div class="cv-section">
-        <h3 class="cv-section-heading">${lang === 'ar' ? 'أبرز المشروعات الهندسية المنفذة' : 'SELECTED ENGINEERING PROJECTS'}</h3>
-        ${relevantProjects.slice(0, 4).map(p => `
-          <div class="cv-item">
-            <div class="cv-item-title-row">
-              <span>${p.title[lang]}</span>
-              <span style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--signal-green);">${p.badge}</span>
+        <!-- Education & Academic Honors -->
+        <div class="cv-sheet-section">
+          <h3 class="cv-sheet-section-title">${lang === 'ar' ? 'المؤهل الأكاديمي والتميز الدراسي' : 'EDUCATION & ACADEMIC DISTINCTION'}</h3>
+          <div class="cv-sheet-item">
+            <div class="cv-sheet-item-head">
+              <span>${edu.degree[lang]}</span>
+              <span style="font-family: var(--font-mono); font-size: 0.82rem; color: #0284c7;">${edu.year}</span>
             </div>
-            <div class="cv-item-subtitle">${p.tagline[lang]}</div>
-            <p style="font-size: 0.86rem; color: var(--text-secondary); margin-bottom: 4px;">${p.summary[lang]}</p>
-            <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);">
-              <strong>Architecture:</strong> ${p.architecture}
-            </div>
+            <div class="cv-sheet-item-sub">${edu.institution[lang]}</div>
+            <ul class="cv-sheet-bullets">
+              <li><strong>${edu.grade[lang]}</strong> — ${edu.ranking[lang]}</li>
+              <li><strong>Graduation Project:</strong> ${edu.gradProject.name} — <span style="color: #16a34a; font-weight: 700;">Score: 300 / 300 (Full Score)</span></li>
+            </ul>
           </div>
-        `).join('')}
-      </div>
+        </div>
 
-      <!-- Education & Academic Honors -->
-      <div class="cv-section">
-        <h3 class="cv-section-heading">${lang === 'ar' ? 'المؤهل الأكاديمي والتميز الدراسي' : 'EDUCATION & ACADEMIC DISTINCTION'}</h3>
-        <div class="cv-item">
-          <div class="cv-item-title-row">
-            <span>${edu.degree[lang]}</span>
-            <span style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--copper-gold);">${edu.year}</span>
-          </div>
-          <div class="cv-item-subtitle">${edu.institution[lang]}</div>
-          <ul class="cv-bullets">
-            <li><strong>${edu.grade[lang]}</strong> — ${edu.ranking[lang]}</li>
-            <li><strong>Graduation Project:</strong> ${edu.gradProject.name} — <span style="color: var(--signal-green); font-weight: 700;">Score: 300 / 300 (Full Score)</span></li>
+        <!-- Honors & Awards -->
+        <div class="cv-sheet-section">
+          <h3 class="cv-sheet-section-title">${lang === 'ar' ? 'الجوائز والتكريمات الوطنية' : 'AWARDS & COMPETITIONS'}</h3>
+          <ul class="cv-sheet-bullets">
+            ${PORTFOLIO_DATA.awards.map(aw => `
+              <li>
+                <strong>${aw.title[lang]} (${aw.year})</strong> — ${aw.org[lang]}: 
+                <span>${aw.highlight[lang]}</span>
+              </li>
+            `).join('')}
           </ul>
         </div>
-      </div>
 
-      <!-- Honors & Awards -->
-      <div class="cv-section">
-        <h3 class="cv-section-heading">${lang === 'ar' ? 'الجوائز والتكريمات الوطنية' : 'AWARDS & COMPETITIONS'}</h3>
-        <ul class="cv-bullets">
-          ${PORTFOLIO_DATA.awards.map(aw => `
-            <li>
-              <strong>${aw.title[lang]} (${aw.year})</strong> — ${aw.org[lang]}: 
-              <span>${aw.highlight[lang]}</span>
-            </li>
-          `).join('')}
-        </ul>
-      </div>
-
-      <!-- Languages -->
-      <div class="cv-section">
-        <h3 class="cv-section-heading">${lang === 'ar' ? 'اللغات' : 'LANGUAGES'}</h3>
-        <p style="font-size: 0.88rem; color: var(--text-secondary);">
-          • <strong>Arabic:</strong> Native (اللغة الأم) &nbsp;&nbsp;|&nbsp;&nbsp; 
-          • <strong>English:</strong> Technical Working Proficiency (Strong Reading & Technical Writing)
-        </p>
+        <!-- Languages -->
+        <div class="cv-sheet-section">
+          <h3 class="cv-sheet-section-title">${lang === 'ar' ? 'اللغات' : 'LANGUAGES'}</h3>
+          <p style="font-size: 0.88rem; color: #334155;">
+            • <strong>Arabic:</strong> Native (اللغة الأم) &nbsp;&nbsp;|&nbsp;&nbsp; 
+            • <strong>English:</strong> Technical Working Proficiency (Strong Technical Documentation & Research)
+          </p>
+        </div>
       </div>
     `;
 
@@ -234,7 +236,7 @@ class CvEngine {
     const text = this.container.innerText;
     navigator.clipboard.writeText(text).then(() => {
       if (window.showToast) {
-        window.showToast(window.i18n.t('contact.copySuccess'));
+        window.showToast(window.i18n ? window.i18n.t('contact.copySuccess') : 'Copied to clipboard!');
       }
     });
   }

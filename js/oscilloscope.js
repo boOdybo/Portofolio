@@ -1,7 +1,7 @@
 /**
- * Interactive Hardware Oscilloscope & Signal Analyzer
- * High-performance Canvas renderer simulating embedded digital/analog buses
- * Supports dynamic Dark/Light color schemes
+ * High-Performance Digital Oscilloscope & Logic Analyzer Engine
+ * Simulates real hardware protocols: UART, I²C, SPI, PWM, and Analog Sine with live telemetry
+ * Featuring phosphor bloom, interactive grid, and dynamic theme reactivity
  */
 
 class HardwareOscilloscope {
@@ -9,7 +9,7 @@ class HardwareOscilloscope {
     this.canvas = document.getElementById(canvasId);
     if (!this.canvas) return;
     this.ctx = this.canvas.getContext('2d');
-    this.mode = 'uart'; // 'uart', 'i2c', 'spi', 'pwm', 'sine'
+    this.mode = 'uart';
     this.phase = 0;
     this.isRunning = true;
     this.lastTime = performance.now();
@@ -23,9 +23,10 @@ class HardwareOscilloscope {
   initResize() {
     const resize = () => {
       const rect = this.canvas.parentElement.getBoundingClientRect();
-      this.canvas.width = rect.width * (window.devicePixelRatio || 1);
-      this.canvas.height = 230 * (window.devicePixelRatio || 1);
-      this.ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+      const dpr = window.devicePixelRatio || 1;
+      this.canvas.width = rect.width * dpr;
+      this.canvas.height = 250 * dpr;
+      this.ctx.scale(dpr, dpr);
     };
     resize();
     window.addEventListener('resize', resize);
@@ -37,10 +38,10 @@ class HardwareOscilloscope {
   }
 
   bindControls() {
-    const pillButtons = document.querySelectorAll('.hud-pill-btn');
-    pillButtons.forEach(btn => {
+    const tabs = document.querySelectorAll('.scope-tab-btn');
+    tabs.forEach(btn => {
       btn.addEventListener('click', () => {
-        pillButtons.forEach(b => b.classList.remove('active'));
+        tabs.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const mode = btn.dataset.mode;
         if (mode) this.setMode(mode);
@@ -52,7 +53,6 @@ class HardwareOscilloscope {
     const freqEl = document.getElementById('hudFreq');
     const voltEl = document.getElementById('hudVolt');
     const busEl = document.getElementById('hudBus');
-
     if (!freqEl || !voltEl || !busEl) return;
 
     switch (this.mode) {
@@ -73,19 +73,19 @@ class HardwareOscilloscope {
         break;
       case 'pwm':
         freqEl.textContent = '25.0 kHz';
-        voltEl.textContent = '5.0V / 75% Duty';
-        busEl.textContent = 'PWM Driver';
+        voltEl.textContent = '5.0V / 75%';
+        busEl.textContent = 'PWM H-Bridge';
         break;
       case 'sine':
         freqEl.textContent = '1.00 kHz';
         voltEl.textContent = '±2.5V AC';
-        busEl.textContent = 'Analog Probe';
+        busEl.textContent = 'Analog Sensor';
         break;
     }
   }
 
   drawGrid(w, h) {
-    this.ctx.strokeStyle = 'rgba(0, 210, 255, 0.08)';
+    this.ctx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
     this.ctx.lineWidth = 1;
 
     const gridSize = 24;
@@ -100,8 +100,8 @@ class HardwareOscilloscope {
     }
     this.ctx.stroke();
 
-    // Center Crosshairs
-    this.ctx.strokeStyle = 'rgba(0, 210, 255, 0.15)';
+    // Center Crosshairs with tick marks
+    this.ctx.strokeStyle = 'rgba(56, 189, 248, 0.18)';
     this.ctx.beginPath();
     this.ctx.moveTo(0, h / 2);
     this.ctx.lineTo(w, h / 2);
@@ -115,23 +115,24 @@ class HardwareOscilloscope {
 
     const dt = (timestamp - this.lastTime) / 1000;
     this.lastTime = timestamp;
-    this.phase += dt * 5;
+    this.phase += dt * 4;
 
-    const w = this.canvas.width / (window.devicePixelRatio || 1);
-    const h = this.canvas.height / (window.devicePixelRatio || 1);
+    const dpr = window.devicePixelRatio || 1;
+    const w = this.canvas.width / dpr;
+    const h = this.canvas.height / dpr;
 
     // Clear Screen
-    this.ctx.fillStyle = '#060b17';
+    this.ctx.fillStyle = '#050811';
     this.ctx.fillRect(0, 0, w, h);
 
     // Grid
     this.drawGrid(w, h);
 
-    // Signal Trace
-    this.ctx.shadowBlur = 10;
-    this.ctx.shadowColor = '#00d2ff';
-    this.ctx.strokeStyle = '#00d2ff';
-    this.ctx.lineWidth = 2;
+    // Primary Signal Waveform Trace
+    this.ctx.shadowBlur = 12;
+    this.ctx.shadowColor = '#38bdf8';
+    this.ctx.strokeStyle = '#38bdf8';
+    this.ctx.lineWidth = 2.2;
 
     this.ctx.beginPath();
 
@@ -141,7 +142,7 @@ class HardwareOscilloscope {
 
     switch (this.mode) {
       case 'uart': {
-        const bitWidth = 40;
+        const bitWidth = 38;
         const bits = [1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1];
         const offset = (this.phase * 50) % (bitWidth * bits.length);
 
@@ -159,8 +160,8 @@ class HardwareOscilloscope {
       }
 
       case 'i2c': {
-        // SCL (Clock)
-        const clkWidth = 24;
+        // Clock Channel (SCL)
+        const clkWidth = 22;
         const clkOffset = (this.phase * 60) % (clkWidth * 2);
         this.ctx.moveTo(0, highY - 15);
         for (let x = -clkOffset; x < w + clkWidth; x += clkWidth) {
@@ -171,12 +172,12 @@ class HardwareOscilloscope {
         }
         this.ctx.stroke();
 
-        // SDA (Data)
+        // Data Channel (SDA) - Vibrant Violet Accent
         this.ctx.beginPath();
-        this.ctx.strokeStyle = '#f59e0b';
-        this.ctx.shadowColor = '#f59e0b';
+        this.ctx.strokeStyle = '#818cf8';
+        this.ctx.shadowColor = '#818cf8';
         const sdaBits = [1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0];
-        const sdaWidth = 48;
+        const sdaWidth = 44;
         const sdaOffset = (this.phase * 60) % (sdaWidth * sdaBits.length);
         for (let x = -sdaOffset; x < w + sdaWidth; x += sdaWidth) {
           const idx = Math.floor(Math.abs(x + sdaOffset) / sdaWidth) % sdaBits.length;
@@ -188,20 +189,20 @@ class HardwareOscilloscope {
       }
 
       case 'spi': {
-        const burstWidth = 120;
+        const burstWidth = 110;
         const burstOffset = (this.phase * 80) % burstWidth;
         this.ctx.moveTo(0, highY);
         for (let x = 0; x < w; x += 4) {
-          const inBurst = (x + burstOffset) % burstWidth < 80;
-          const y = inBurst ? (Math.sin((x + this.phase * 20) * 0.4) > 0 ? highY : lowY) : highY;
+          const inBurst = (x + burstOffset) % burstWidth < 70;
+          const y = inBurst ? (Math.sin((x + this.phase * 20) * 0.45) > 0 ? highY : lowY) : highY;
           this.ctx.lineTo(x, y);
         }
         break;
       }
 
       case 'pwm': {
-        const period = 60;
-        const duty = 0.7;
+        const period = 55;
+        const duty = 0.75;
         const offset = (this.phase * 50) % period;
         this.ctx.moveTo(0, highY);
         for (let x = -offset; x < w + period; x += period) {
@@ -217,7 +218,7 @@ class HardwareOscilloscope {
       case 'sine': {
         for (let x = 0; x < w; x++) {
           const noise = (Math.random() - 0.5) * 2;
-          const y = midY + Math.sin(x * 0.03 - this.phase * 3) * (h * 0.35) + noise;
+          const y = midY + Math.sin(x * 0.03 - this.phase * 3.5) * (h * 0.35) + noise;
           if (x === 0) this.ctx.moveTo(x, y);
           else this.ctx.lineTo(x, y);
         }

@@ -1,7 +1,7 @@
 /**
- * Main Application Orchestrator
+ * Main Application Orchestrator — "Electric Sapphire & Aurora"
  * Abdelrahman Fathi Abodaif — Portfolio Web App
- * Features: Dark/Light Mode, Interactive Sidebar, Dynamic Rendering, Modals, Multilingual
+ * Features: Floating Navbar, Bento Grids, Modal Deep-Dive, Live Tweaks Panel, ATS Engine
  */
 
 class PortfolioApp {
@@ -23,6 +23,7 @@ class PortfolioApp {
     this.renderTronicsHubServices();
     this.bindEvents();
     this.setupScrollSpy();
+    this.setupTweaksPanel();
 
     window.addEventListener('langChanged', () => {
       this.renderHeroRotation();
@@ -47,20 +48,16 @@ class PortfolioApp {
     localStorage.setItem('portfolio_theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
 
-    // Update Theme Toggle Button Icon & Label
-    const themeIcon = document.getElementById('themeIcon');
-    const themeLabel = document.getElementById('themeLabel');
-    if (themeIcon && themeLabel) {
+    // Update Theme Toggle Button Icons
+    const themeIcons = document.querySelectorAll('.theme-icon-slot');
+    themeIcons.forEach(icon => {
       if (theme === 'dark') {
-        themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
-        themeLabel.textContent = 'Dark';
+        icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
       } else {
-        themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
-        themeLabel.textContent = 'Light';
+        icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
       }
-    }
+    });
 
-    // Notify oscilloscope of theme update
     if (window.oscilloscopeInstance) {
       window.oscilloscopeInstance.updateTelemetry();
     }
@@ -82,12 +79,12 @@ class PortfolioApp {
 
     this.rotateInterval = setInterval(() => {
       idx = (idx + 1) % list.length;
-      rotateEl.style.opacity = 0;
+      rotateEl.style.opacity = '0';
       setTimeout(() => {
         rotateEl.textContent = list[idx];
-        rotateEl.style.opacity = 1;
+        rotateEl.style.opacity = '1';
       }, 250);
-    }, 3200);
+    }, 3400);
   }
 
   /* ========================================================================
@@ -100,42 +97,50 @@ class PortfolioApp {
 
     const cards = [
       {
-        icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+        variant: 'cyan',
+        rank: lang === 'ar' ? 'الترتيب: الثالث على الشعبة' : 'Ranked 3rd in Division',
+        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
         title: lang === 'ar' ? 'ممتاز مع مرتبة الشرف (88%)' : 'Excellent with Honors (88%)',
-        tag: lang === 'ar' ? 'الترتيب: الثالث على شعبة الإلكترونيات' : 'Ranked 3rd in Electronics Division',
+        tag: lang === 'ar' ? 'مشروع التخرج: 300/300 الدرجة النهائية' : 'Grad Project Score: 300/300 Full Mark',
         desc: lang === 'ar' 
-          ? 'تخرج من كلية التكنولوجيا والتعليم بجامعة سوهاج بتقدير ممتاز مع مرتبة الشرف، والترتيب العاشر على الكلية، مع إنجاز مشروع التخرج بالدرجة النهائية 300/300.'
-          : 'Graduated from Sohag University with high distinction, ranking 3rd in the Electronics Division and 10th College-Wide. Awarded 300/300 full score for the graduation project.',
-        isCopper: false
+          ? 'تخرج من كلية التكنولوجيا والتعليم بجامعة سوهاج بتقدير ممتاز مع مرتبة الشرف، الترتيب الثالث على شعبة الإلكترونيات والعاشر على الكلية، مع إنجاز مشروع التخرج بالدرجة النهائية 300 من 300 بإشادة لجنة التحكيم.'
+          : 'Graduated from Sohag University with highest honors, ranking 3rd in the Electronics Division and 10th College-Wide. Awarded 300/300 full score for the OptiNutri connected health platform.'
       },
       {
-        icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>',
+        variant: 'purple',
+        rank: lang === 'ar' ? 'المركز الأول محلياً' : '1st Place Local Summit',
+        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>',
         title: lang === 'ar' ? 'المركز الأول — Hult Prize 2024' : '1st Place — Hult Prize 2024',
         tag: lang === 'ar' ? 'التأهل للقمة الإقليمية في تايلاند' : 'Qualified to Regional Stage in Thailand',
         desc: lang === 'ar'
-          ? 'الفوز بالمركز الأول على مستوى جامعة سوهاج في مسابقة هلت العالمية للابتكار والريادة والتأهل لتمثيل الجامعة إقليمياً.'
-          : 'Secured first place across Sohag University for exceptional technical solution design, gaining qualification to the regional summit in Thailand.',
-        isCopper: true
+          ? 'الفوز بالمركز الأول على مستوى جامعة سوهاج في مسابقة هلت العالمية للابتكار والريادة والتأهل المباشر لتمثيل الجامعة في القمة الإقليمية الدولية في تايلاند.'
+          : 'Secured first place across Sohag University for innovative hardware solution architecture, earning direct qualification to represent the university in the Thailand regional summit.'
       },
       {
-        icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-        title: lang === 'ar' ? 'فائز بمسابقتي ISF (EGP / IGB)' : 'Double Winner — ISF (EGP & IGB)',
-        tag: lang === 'ar' ? 'الفريق الفائز الوحيد الممثل لصعيد مصر' : 'Sole Winning Team from Upper Egypt',
+        variant: 'green',
+        rank: lang === 'ar' ? 'فريق وحيد من الصعيد' : 'Sole Team from Upper Egypt',
+        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+        title: lang === 'ar' ? 'فائز بمسابقتي ISF (EGP & IGB)' : 'Double Winner — ISF (EGP & IGB)',
+        tag: lang === 'ar' ? 'صندوق رعاية المبتكرين والنوابغ' : 'Innovators Support Fund (Gov)',
         desc: lang === 'ar'
-          ? 'التتويج المزدوج في مسابقتي صندوق رعاية المبتكرين والنوابغ التابع لوزارة التعليم العالي عن النماذج العتادية المتقدمة.'
-          : 'Awarded national victories across both EGP and IGB tracks organized by the Egyptian Innovators Support Fund (ISF) for high-impact hardware innovations.',
-        isCopper: false
+          ? 'التتويج المزدوج في مسابقتي صندوق رعاية المبتكرين والنوابغ التابع لوزارة التعليم العالي والبحث العلمي كفريق فائز وحيد ممثل لصعيد مصر في الأنظمة العتادية المتقدمة.'
+          : 'Awarded national victories across both EGP and IGB tracks organized by the Egyptian Innovators Support Fund (ISF) for high-impact hardware and embedded innovations.'
       }
     ];
 
     container.innerHTML = cards.map(c => `
-      <div class="highlight-card ${c.isCopper ? 'copper' : ''}">
-        <div class="card-icon-wrap ${c.isCopper ? 'copper' : ''}">
-          ${c.icon}
+      <div class="honor-bento-card ${c.variant}">
+        <div>
+          <div class="honor-top-badge-row">
+            <div class="honor-icon-emblem">
+              ${c.icon}
+            </div>
+            <span class="honor-rank-pill">${c.rank}</span>
+          </div>
+          <h3 class="honor-title">${c.title}</h3>
+          <div class="honor-tagline">${c.tag}</div>
         </div>
-        <span class="highlight-tag">${c.tag}</span>
-        <h3>${c.title}</h3>
-        <p>${c.desc}</p>
+        <p class="honor-desc">${c.desc}</p>
       </div>
     `).join('');
   }
@@ -154,27 +159,27 @@ class PortfolioApp {
     }
 
     grid.innerHTML = filtered.map(p => `
-      <div class="project-card" data-project-id="${p.id}">
-        <div class="project-card-header">
-          <span class="project-badge-pill ${p.id === 'optinutri' ? 'score-300' : ''}">${p.badge}</span>
+      <div class="project-bento-card" data-project-id="${p.id}">
+        <div class="project-card-top">
+          <span class="project-badge-tag ${p.id === 'optinutri' ? 'highlight-gold' : ''}">${p.badge}</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text-faint);">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
           </svg>
         </div>
         <div class="project-card-body">
-          <h3 class="project-card-title">${p.title[lang]}</h3>
-          <div class="project-card-tagline">${p.tagline[lang]}</div>
-          <p class="project-card-desc">${p.summary[lang]}</p>
-          <div class="project-tech-chips">
+          <h3 class="project-card-heading">${p.title[lang]}</h3>
+          <div class="project-card-subtitle">${p.tagline[lang]}</div>
+          <p class="project-card-text">${p.summary[lang]}</p>
+          <div class="project-chips-container">
             ${p.specs.slice(0, 3).map(s => `
-              <span class="tech-chip">${s.value.split(' ')[0]}</span>
+              <span class="spec-chip">${s.value.split(' ')[0]}</span>
             `).join('')}
           </div>
         </div>
-        <div class="project-card-footer">
-          <span>${lang === 'ar' ? 'عرض المخطط والعتاد' : 'Inspect Architecture'}</span>
-          <span class="view-details-arrow">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="project-card-bottom">
+          <span>${lang === 'ar' ? 'فحص المعمارية والعتاد' : 'Inspect Architecture'}</span>
+          <span class="arrow-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
             </svg>
           </span>
@@ -182,8 +187,8 @@ class PortfolioApp {
       </div>
     `).join('');
 
-    // Bind click events on cards to open modal
-    grid.querySelectorAll('.project-card').forEach(card => {
+    // Bind card clicks
+    grid.querySelectorAll('.project-bento-card').forEach(card => {
       card.addEventListener('click', () => {
         const id = card.dataset.projectId;
         this.openProjectModal(id);
@@ -201,33 +206,33 @@ class PortfolioApp {
     if (!backdrop || !container) return;
 
     container.innerHTML = `
-      <div class="modal-header">
+      <div class="modal-top-bar">
         <div>
-          <span class="project-badge-pill ${project.id === 'optinutri' ? 'score-300' : ''}" style="margin-bottom: 6px; display: inline-block;">
+          <span class="project-badge-tag ${project.id === 'optinutri' ? 'highlight-gold' : ''}" style="margin-bottom: 8px; display: inline-block;">
             ${project.badge}
           </span>
-          <h2 style="font-size: 1.35rem; color: var(--text-main);">${project.title[lang]}</h2>
-          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-accent-copper);">${project.tagline[lang]}</div>
+          <h2 style="font-size: 1.4rem; color: var(--text-main);">${project.title[lang]}</h2>
+          <div style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--color-primary);">${project.tagline[lang]}</div>
         </div>
-        <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close">
+        <button class="modal-close-trigger" id="modalCloseBtn" aria-label="Close">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
 
-      <div class="modal-body">
-        <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px;">
+      <div class="modal-content-scroll">
+        <p style="font-size: 0.96rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 24px;">
           ${project.summary[lang]}
         </p>
 
-        <div class="modal-arch-flow">
-          <div class="modal-arch-flow-title">⚡ ${window.i18n.t('modal.architectureFlow')}</div>
+        <div class="modal-architecture-box">
+          <div class="box-label">⚡ ${window.i18n.t('modal.architectureFlow')}</div>
           <code>${project.architecture}</code>
         </div>
 
-        <h4 style="font-size: 1rem; margin-bottom: 10px; color: var(--color-primary); font-family: var(--font-mono);">
+        <h4 style="font-size: 1.05rem; margin-bottom: 12px; color: var(--color-primary); font-family: var(--font-mono);">
           🛠️ ${window.i18n.t('modal.technicalSpecs')}
         </h4>
-        <table class="modal-specs-table">
+        <table class="modal-data-table">
           <tbody>
             ${project.specs.map(s => `
               <tr>
@@ -238,13 +243,13 @@ class PortfolioApp {
           </tbody>
         </table>
 
-        <h4 style="font-size: 1rem; margin-bottom: 10px; color: var(--color-accent-copper); font-family: var(--font-mono);">
+        <h4 style="font-size: 1.05rem; margin-bottom: 12px; color: var(--color-secondary-bright); font-family: var(--font-mono);">
           💡 ${window.i18n.t('modal.keyHighlights')}
         </h4>
-        <div class="modal-highlights-list">
+        <div class="modal-points-list">
           ${project.highlights.map(h => `
-            <div class="modal-highlight-item">
-              <span class="modal-highlight-bullet">➔</span>
+            <div class="modal-point-item">
+              <span class="point-bullet">➔</span>
               <span>${h[lang]}</span>
             </div>
           `).join('')}
@@ -281,7 +286,7 @@ class PortfolioApp {
       const sk = PORTFOLIO_DATA.skills[key];
       const isActive = key === this.currentSkillTab;
       return `
-        <button class="skill-domain-btn ${isActive ? 'active' : ''}" data-skill-tab="${key}">
+        <button class="domain-pill-btn ${isActive ? 'active' : ''}" data-skill-tab="${key}">
           <span>${sk.categoryName[lang]}</span>
         </button>
       `;
@@ -290,14 +295,14 @@ class PortfolioApp {
     const activeDomain = PORTFOLIO_DATA.skills[this.currentSkillTab];
     if (activeDomain) {
       itemsContainer.innerHTML = activeDomain.items.map(item => `
-        <div class="skill-item-card">
-          <span class="skill-item-name">${item.name}</span>
-          <span class="skill-item-level">${item.level}</span>
+        <div class="skill-chip-card">
+          <span class="skill-title-text">${item.name}</span>
+          <span class="skill-level-badge">${item.level}</span>
         </div>
       `).join('');
     }
 
-    tabsContainer.querySelectorAll('.skill-domain-btn').forEach(btn => {
+    tabsContainer.querySelectorAll('.domain-pill-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         this.currentSkillTab = btn.dataset.skillTab;
         this.renderSkills();
@@ -306,7 +311,7 @@ class PortfolioApp {
   }
 
   /* ========================================================================
-     6. MALAZ ACADEMY SHOWCASE
+     6. MALAZ ACADEMY HUB (262 LECTURES)
      ======================================================================== */
   renderMalazAcademy() {
     const container = document.getElementById('malazCategoriesGrid');
@@ -315,14 +320,14 @@ class PortfolioApp {
     const academy = PORTFOLIO_DATA.malazAcademy;
 
     container.innerHTML = academy.categories.map(cat => `
-      <div class="malaz-cat-card">
-        <h4 class="malaz-cat-title">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <div class="syllabus-card">
+        <h4 class="syllabus-card-heading">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
           ${cat.name[lang]}
         </h4>
-        <div class="malaz-topic-list">
+        <div class="syllabus-items-list">
           ${cat.topics.map(t => `
-            <div class="malaz-topic-item">${t}</div>
+            <div class="syllabus-item-row">${t}</div>
           `).join('')}
         </div>
       </div>
@@ -338,19 +343,19 @@ class PortfolioApp {
     const lang = window.i18n ? window.i18n.currentLang : 'en';
 
     const icons = {
-      cpu: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>',
-      layers: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
-      award: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>',
-      'book-open': '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>'
+      cpu: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>',
+      layers: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
+      award: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>',
+      'book-open': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>'
     };
 
     container.innerHTML = PORTFOLIO_DATA.tronicshub.services.map(s => `
-      <div class="service-card">
-        <div class="card-icon-wrap copper">
+      <div class="service-bento-card">
+        <div class="service-icon-box">
           ${icons[s.icon] || icons.cpu}
         </div>
-        <h4>${s.title[lang]}</h4>
-        <p style="color: var(--text-muted); line-height: 1.6;">${s.desc[lang]}</p>
+        <h4 class="service-card-title">${s.title[lang]}</h4>
+        <p class="service-card-text">${s.desc[lang]}</p>
       </div>
     `).join('');
   }
@@ -359,7 +364,7 @@ class PortfolioApp {
      8. EVENT BINDINGS & INTERACTIONS
      ======================================================================== */
   bindEvents() {
-    // Theme Switcher Button
+    // Topbar Theme Toggle Button
     const themeBtn = document.getElementById('themeToggleBtn');
     if (themeBtn) {
       themeBtn.addEventListener('click', () => {
@@ -367,16 +372,8 @@ class PortfolioApp {
       });
     }
 
-    // Mobile Theme Button
-    const mobileThemeBtn = document.getElementById('mobileThemeBtn');
-    if (mobileThemeBtn) {
-      mobileThemeBtn.addEventListener('click', () => {
-        this.toggleTheme();
-      });
-    }
-
     // Project Category Filters
-    const filterBtns = document.querySelectorAll('.filter-tab-btn');
+    const filterBtns = document.querySelectorAll('.filter-pill');
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         filterBtns.forEach(b => b.classList.remove('active'));
@@ -397,31 +394,22 @@ class PortfolioApp {
       if (e.key === 'Escape') this.closeProjectModal();
     });
 
-    // Mobile Sidebar Drawer Toggle
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebarToggleBtn');
-    const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-
-    if (sidebarToggle && sidebar && sidebarBackdrop) {
-      sidebarToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-        sidebarBackdrop.classList.toggle('show');
+    // Mobile Hamburger Navigation Drawer
+    const mobileToggle = document.getElementById('mobileNavToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileToggle && mobileMenu) {
+      mobileToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('open');
       });
 
-      sidebarBackdrop.addEventListener('click', () => {
-        sidebar.classList.remove('open');
-        sidebarBackdrop.classList.remove('show');
-      });
-
-      sidebar.querySelectorAll('.nav-item').forEach(link => {
+      mobileMenu.querySelectorAll('.mobile-nav-item').forEach(link => {
         link.addEventListener('click', () => {
-          sidebar.classList.remove('open');
-          sidebarBackdrop.classList.remove('show');
+          mobileMenu.classList.remove('open');
         });
       });
     }
 
-    // Direct Copy to Clipboard Handler
+    // Direct Copy to Clipboard Handlers
     const copyTriggers = document.querySelectorAll('[data-copy]');
     copyTriggers.forEach(el => {
       el.addEventListener('click', (e) => {
@@ -434,8 +422,11 @@ class PortfolioApp {
     });
   }
 
+  /* ========================================================================
+     9. SCROLLSPY (ACTIVE NAV LINK HIGHLIGHT)
+     ======================================================================== */
   setupScrollSpy() {
-    const navItems = document.querySelectorAll('.nav-item');
+    const navItems = document.querySelectorAll('.nav-link');
     const sections = document.querySelectorAll('section[id]');
 
     window.addEventListener('scroll', () => {
@@ -458,19 +449,72 @@ class PortfolioApp {
     });
   }
 
+  /* ========================================================================
+     10. LIVE TWEAKS PANEL (As recommended in SKILL.md)
+     ======================================================================== */
+  setupTweaksPanel() {
+    const trigger = document.getElementById('tweaksTriggerBtn');
+    const windowEl = document.getElementById('tweaksWindow');
+    const closeBtn = document.getElementById('tweaksCloseBtn');
+
+    if (trigger && windowEl) {
+      trigger.addEventListener('click', () => {
+        windowEl.classList.toggle('open');
+      });
+    }
+
+    if (closeBtn && windowEl) {
+      closeBtn.addEventListener('click', () => {
+        windowEl.classList.remove('open');
+      });
+    }
+
+    // Accent Palette Swatches
+    const swatches = document.querySelectorAll('.swatch-btn');
+    swatches.forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        swatches.forEach(s => s.classList.remove('active'));
+        swatch.classList.add('active');
+        const color = swatch.dataset.color;
+
+        if (color === 'sapphire') {
+          document.documentElement.style.setProperty('--color-primary', '#38bdf8');
+          document.documentElement.style.setProperty('--color-primary-bright', '#7dd3fc');
+          document.documentElement.style.setProperty('--color-primary-glow', 'rgba(56, 189, 248, 0.22)');
+          document.documentElement.style.setProperty('--color-primary-gradient', 'linear-gradient(135deg, #38bdf8 0%, #6366f1 100%)');
+        } else if (color === 'emerald') {
+          document.documentElement.style.setProperty('--color-primary', '#34d399');
+          document.documentElement.style.setProperty('--color-primary-bright', '#6ee7b7');
+          document.documentElement.style.setProperty('--color-primary-glow', 'rgba(52, 211, 153, 0.22)');
+          document.documentElement.style.setProperty('--color-primary-gradient', 'linear-gradient(135deg, #34d399 0%, #06b6d4 100%)');
+        } else if (color === 'violet') {
+          document.documentElement.style.setProperty('--color-primary', '#a78bfa');
+          document.documentElement.style.setProperty('--color-primary-bright', '#c4b5fd');
+          document.documentElement.style.setProperty('--color-primary-glow', 'rgba(167, 139, 250, 0.22)');
+          document.documentElement.style.setProperty('--color-primary-gradient', 'linear-gradient(135deg, #a78bfa 0%, #ec4899 100%)');
+        } else if (color === 'rose') {
+          document.documentElement.style.setProperty('--color-primary', '#fb7185');
+          document.documentElement.style.setProperty('--color-primary-bright', '#fda4af');
+          document.documentElement.style.setProperty('--color-primary-glow', 'rgba(251, 113, 133, 0.22)');
+          document.documentElement.style.setProperty('--color-primary-gradient', 'linear-gradient(135deg, #fb7185 0%, #f43f5e 100%)');
+        }
+      });
+    });
+  }
+
   showToast(message) {
     let toast = document.getElementById('globalToast');
     if (!toast) {
       toast = document.createElement('div');
       toast.id = 'globalToast';
-      toast.className = 'toast-msg';
+      toast.className = 'toast-bubble';
       document.body.appendChild(toast);
     }
     toast.textContent = message;
     toast.classList.add('show');
     setTimeout(() => {
       toast.classList.remove('show');
-    }, 3000);
+    }, 3200);
   }
 }
 
